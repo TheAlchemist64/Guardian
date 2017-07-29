@@ -1,4 +1,5 @@
-tween = require "tween"
+tween = require 'tween'
+Camera = require 'hump.camera'
 
 function love.load()
 	--Initialize Map
@@ -12,14 +13,31 @@ function love.load()
 		end
 	end
 	--Initialize Player
-	player = {x=10, y=10, tween=nil}
+	player = {x=1, y=1, tween=nil, 
+		getX=function(self) 
+			return (self.x - 1) * TILE_SIZE + TILE_SIZE/4
+		end,
+		getY=function(self)
+			return (self.y - 1) * TILE_SIZE + TILE_SIZE/4
+		end,
+		center=function(self)
+			return self:getX() + TILE_SIZE/4, self:getY() + TILE_SIZE/4
+		end}
+	--Initialize Camera
+	camera = Camera(player:center())
 end
 
 function love.update(dt)
+	--Move Player
 	if player.tween then player.tween:update(dt) end
+	--Move Camera
+	local px, py = player:center()
+	local dx,dy = px - camera.x, py - camera.y
+    camera:move(dx/2, dy/2)
 end
 
 function love.draw()
+	camera:attach()
 	--Draw Map
 	for x, col in ipairs(map) do
 		for y, tile in ipairs(col) do
@@ -33,15 +51,17 @@ function love.draw()
 	--Draw Player
 	love.graphics.setColor(255,255,0)
 	love.graphics.rectangle('fill',
-							player.x * TILE_SIZE + TILE_SIZE/4, 
-							player.y * TILE_SIZE + TILE_SIZE/4,
+							player:getX(), 
+							player:getY(),
 							TILE_SIZE/2, TILE_SIZE/2)
+	camera:detach()
 end
 
 function love.mousereleased(x, y, button)
 	if button == 1 then
-		--player.x = math.floor(x/TILE_SIZE)
-		--player.y = math.floor(y/TILE_SIZE)
-		player.tween = tween.new(2, player, {x=math.floor(x/TILE_SIZE), y=math.floor(y/TILE_SIZE)})
+		x, y = camera:mousePosition()
+		local newx = math.floor(x/TILE_SIZE) + 1
+		local newy = math.floor(y/TILE_SIZE) + 1
+		player.tween = tween.new(2, player, {x=newx, y=newy})
 	end
 end
