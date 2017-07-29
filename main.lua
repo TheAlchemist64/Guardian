@@ -35,3 +35,10 @@ function love.draw()
 							player.y * TILE_SIZE + TILE_SIZE/4,
 							TILE_SIZE/2, TILE_SIZE/2)
 end
+
+function love.mousereleased(x, y, button)
+	if button == 1 then
+		player.x = math.floor(x/TILE_SIZE)
+		player.y = math.floor(y/TILE_SIZE)
+	end
+end
