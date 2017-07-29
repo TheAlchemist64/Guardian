@@ -3,7 +3,7 @@ tween = require "tween"
 function love.load()
 	--Initialize Map
 	MAP_SIZE = 20
-	TILE_SIZE = 16
+	TILE_SIZE = 32
 	map = {}
 	for x=1,MAP_SIZE do
 		map[x] = {}
@@ -31,7 +31,7 @@ function love.draw()
 		end
 	end
 	--Draw Player
-	love.graphics.setColor(200,200,255)
+	love.graphics.setColor(255,255,0)
 	love.graphics.rectangle('fill',
 							player.x * TILE_SIZE + TILE_SIZE/4, 
 							player.y * TILE_SIZE + TILE_SIZE/4,
