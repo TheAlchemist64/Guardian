@@ -1,3 +1,5 @@
+tween = require "tween"
+
 function love.load()
 	--Initialize Map
 	MAP_SIZE = 20
@@ -10,11 +12,11 @@ function love.load()
 		end
 	end
 	--Initialize Player
-	player = {x=10, y=10}
+	player = {x=10, y=10, tween=nil}
 end
 
 function love.update(dt)
-
+	if player.tween then player.tween:update(dt) end
 end
 
 function love.draw()
@@ -38,7 +40,8 @@ end
 
 function love.mousereleased(x, y, button)
 	if button == 1 then
-		player.x = math.floor(x/TILE_SIZE)
-		player.y = math.floor(y/TILE_SIZE)
+		--player.x = math.floor(x/TILE_SIZE)
+		--player.y = math.floor(y/TILE_SIZE)
+		player.tween = tween.new(2, player, {x=math.floor(x/TILE_SIZE), y=math.floor(y/TILE_SIZE)})
 	end
 end
